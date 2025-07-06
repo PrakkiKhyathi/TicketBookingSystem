@@ -3,12 +3,75 @@
  */
 package ticket.booking;
 
+import ticket.booking.entities.Ticket;
+import ticket.booking.entities.User;
+import ticket.booking.services.UserBookingService;
+import ticket.booking.util.UserServiceUtil;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.UUID;
+
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
+
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        System.out.println("Running Train Booking system");
+        Scanner sc=new Scanner(System.in);
+        int option=0;
+        UserBookingService userBookingService;
+        try{
+            userBookingService=new UserBookingService();
+
+        } catch (IOException e) {
+            System.out.println("There is something wrong");
+            return;
+        }
+        while(option!=7)
+        {
+            System.out.println("Choose Option");
+            System.out.println("1. Sign Up");
+            System.out.println("2. Login");
+            System.out.println("3. Fetch Bookings");
+            System.out.println("4. Search Trains");
+            System.out.println("5. Book a seat");
+            System.out.println("6. Cancel My Booking");
+            System.out.println("7. Exit the app");
+            option=sc.nextInt();
+            switch (option){
+                case 1:
+                    System.out.println("Enter the username to signup");
+                    String nameToSignUp=sc.next();
+                    System.out.println("Enter the password to signup");
+                    String passwordToSignUp=sc.next();
+                    User userToSignUp=new User(nameToSignUp,passwordToSignUp, UserServiceUtil.hashPassword(passwordToSignUp)
+                            ,UUID.randomUUID().toString(),new ArrayList<Ticket>());
+                    userBookingService.signUp(userToSignUp);
+                    break;
+                case 2:
+                    System.out.println("Enter the username to login");
+                    String nameToLogin=sc.next();
+                    System.out.println("Enter the password to login");
+                    String passwordToLogin=sc.next();
+                    User userToLogin=new User(nameToLogin,passwordToLogin, UserServiceUtil.hashPassword(passwordToLogin), UUID.randomUUID().toString(),new ArrayList<>());
+                    try{
+                        userBookingService=new UserBookingService(userToLogin);
+                    } catch (IOException e) {
+                        return;
+                    }
+                    break;
+                case 3:
+                    System.out.println("");
+                    userBookingService.fetchBooking();
+                    break;
+                case 4:
+                    System.out.println("Search trains functionality is not implemented yet.");
+                    break;
+
+            }
+        }
+
+
     }
 }
