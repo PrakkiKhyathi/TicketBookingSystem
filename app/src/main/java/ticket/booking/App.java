@@ -4,14 +4,13 @@
 package ticket.booking;
 
 import ticket.booking.entities.Ticket;
+import ticket.booking.entities.Train;
 import ticket.booking.entities.User;
 import ticket.booking.services.UserBookingService;
 import ticket.booking.util.UserServiceUtil;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.UUID;
+import java.util.*;
 
 public class App {
 
@@ -21,6 +20,7 @@ public class App {
         Scanner sc=new Scanner(System.in);
         int option=0;
         UserBookingService userBookingService;
+        Train trainSelectedForBooking=new Train();
         try{
             userBookingService=new UserBookingService();
 
@@ -62,12 +62,25 @@ public class App {
                     }
                     break;
                 case 3:
-                    System.out.println("");
+                    System.out.println("Fetching your bookings");
                     userBookingService.fetchBooking();
                     break;
                 case 4:
-                    System.out.println("Search trains functionality is not implemented yet.");
-                    break;
+                    System.out.println("Type your source station");
+                    String source=sc.next();
+                    System.out.println("Type your destination station");
+                    String destination=sc.next();
+                    List<Train> trains=userBookingService.getTrains(source,destination);
+                    int index=1;
+                    for(Train t:trains){
+                        System.out.println(index+" Train id "+t.getTrainId());
+                        for(Map.Entry<String,Date> entry:t.getStationTimes().entrySet()){
+                            System.out.println("Station: "+entry.getKey()+" time: "+entry.getValue());
+                        }
+                    }
+                    System.out.println("Select a train by typing 1 2 3");
+                    trainSelectedForBooking=trains.get(sc.nextInt());
+                    
 
             }
         }

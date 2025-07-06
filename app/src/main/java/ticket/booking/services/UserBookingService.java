@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import ticket.booking.entities.Ticket;
+import ticket.booking.entities.Train;
 import ticket.booking.entities.User;
 import ticket.booking.util.UserServiceUtil;
 
@@ -80,6 +81,17 @@ public class UserBookingService {
         {
             return Boolean.FALSE;
         }
+    }
+    public List<Train> getTrains(String source,String destination){
+        try {
+            TrainService trainService = new TrainService();
+            return trainService.searchTrains(source, destination);
+        }
+        catch (IOException ex){
+            System.out.println("Error fetching trains: " + ex.getMessage());
+            return null;
+        }
+
     }
 }
 
